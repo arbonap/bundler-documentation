@@ -1,0 +1,37 @@
+Hello there file!
+
+`somefile = File.open("sample.txt", "w")``
+- This line invokes the `File` class method  `open`, which makes us pass to it 2 args:
+the first being the filename, represented by a String, the second as the read/write mode. "w" stands for  write.
+- If you want to append something to an already existing file, use `a` as the second argument instead of `w`. If not, you will write over the existing file and lose everything.
+somefile.close
+
+- File class also has its own `puts` method that prints to the file.
+- You can also use write, which prints without a newline character at the end.
+
+- close method finished the writing process and prevents further data operations
+
+``` File.open("sample.txt", "w"){ |somefile| somefile.puts "Hello file!"} ```
+
+Using the block convention with File.open, the file handle is automatically closed at the end of the block.
+
+The readlines method can draw in all the content and automatically parse it as an array, splitting the file contents by the line breaks.
+the readlines method is bad in terms of loading in a huge file in memory at once.
+
+readline method reads a singular line
+If you keep calling readline until you hit the end of the file and then call it again, you'll get an "end of file" error.
+
+there is an `.eof?` method
+
+
+A file's close method forces a flush of the pending data.
+
+File.exists?
+# checks whether a file or a directory exists and returns true/false
+# Dir.mkdir(dirname) is to make directories
+
+```
+dirname = "data-files"
+Dir.mkdir(dirname) unless File.exists?dirname
+File.open("#{dirname}/new-file.txt", 'w'){|f| f.write('Hello world!')}
+```

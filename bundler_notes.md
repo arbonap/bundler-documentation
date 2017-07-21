@@ -16,6 +16,15 @@
 - Bundler offers a rock-solid guarantee that the third-party code you are running in development and testing is also the third-party code you are running in production.
 - `Installing Groups`: This means that you cannot include different versions of the same gem in different groups, because doing so would result in different sets of dependencies used in development and production.
 - `Binstubs` are wrapper scripts around executables (sometimes referred to as "binaries", although they don't have to be compiled) whose purpose is to prepare the environment before dispatching the call to the original executable.
+- From André, "the extremely brief summary is “bundler creates a tiny ruby file that loads bundler and then runs the command, and puts that into bin/”
+- for example, if you run `bundle binstubs rspec-core`, bundler will create the file `bin/rspec`, and that file will contain just enough code to load bundler, tell it to load the bundled gems, and then run rspec"
+- if you run the `rspec` command directly, without a bundler binstub, rubygems will load the newest version of rspec and that can cause an error if your application actually needs an older version of rspec than the newest version that’s installed
+
+- the other way to get the correct version of rspec is to run `bundle exec rspec`, which tells bundler to load the bundle and then run the `rspec` command
+
+- binstubs are a shortcut/alternative to always having to use `bundle exec`
+
+- and conveniently link the `bin/whatever` inside the application to the exact version of `whatever` that the application needs
 
 # [Getting Started - Installing Bundler and bundle init] (http://bundler.io/v1.15/guides/using_bundler_in_applications.html)
 ```
@@ -113,3 +122,16 @@ Use bundle install conservative update behavior and do not allow shared dependen
 - What does `.gemspec` do? ["Developing a RubyGem using Bundler" Guide](https://bundler.io/v1.13/guides/creating_gem):
   - ``` foodie.gemspec: The Gem Specification file. This is where we provide information for Rubygems’ consumption such as the name, description and homepage of our gem. This is also where we specify the dependencies our gem needs to run.
   ```
+
+By adding this line (`spec.add_development_dependency "rspec", "~> 3.2"
+`) inside of the `Gem::Specification` block. We can then reference this anytime we want to lad these gems with the following line:
+  - Bundler.require(:default, :development)
+
+  - The benefit of putting this dependency specification inside of gayify.gemspec rather than the Gemfile is that anybody who runs `gem install gayify --dev` will get these development dependencies installed too. This command is used for when people wish to test a gem without having to fork it or clone it from GitHub.
+
+** When you run `bundle install`, rspec will be installed for this library and any other library we use with Bundler. but not for the system. **
+  - It's important to note that any gem installed by Bundler will not muck about with gems installed by `gem install`. Bundler is a sandboxed environment. _It's best practice to use Bundler to manager our gems so that we don't have gem version conflicts._
+
+### bundle exec:
+ - `bundle exec` will implicitly update the lockfile if the gemfile & lockfile do not match
+ - `bundle exec` does modify the lockfile when running `bundle check`
