@@ -135,3 +135,13 @@ By adding this line (`spec.add_development_dependency "rspec", "~> 3.2"
 ### bundle exec:
  - `bundle exec` will implicitly update the lockfile if the gemfile & lockfile do not match
  - `bundle exec` does modify the lockfile when running `bundle check`
+
+ - `bundle install` -- any gem installed by BUndler won't muck about with gems installed by `gem install`. It's effectively a sandboxed environment.
+
+ _Use Bunderl to manage gems so there are no gem version conflicts_
+
+ `bundle install` generates the `Gemfile.lock`.
+ - Ensures every system this library is developed on has teh _exact same gems_ so that it should always be checked into version control .
+
+
+`Using gayify 0.1.0 from source at `.` `
