@@ -141,7 +141,13 @@ By adding this line (`spec.add_development_dependency "rspec", "~> 3.2"
  _Use Bunderl to manage gems so there are no gem version conflicts_
 
  `bundle install` generates the `Gemfile.lock`.
- - Ensures every system this library is developed on has teh _exact same gems_ so that it should always be checked into version control .
+ - Ensures every system this library is developed on has the _exact same gems_ so that it should always be checked into version control .
 
 
 `Using gayify 0.1.0 from source at `.` `
+You can specify a local install path for bundler to use instead of system gems by running `bundle install --path .bundle`
+- `.bundle` isn't a special location. it accepts any path.
+
+when bundler uses the --path option, it will not consider any system gems
+
+bundler will look for the Gemfile in the current directory and traverse up each parent directory to see if it can find one.
