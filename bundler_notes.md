@@ -16,7 +16,7 @@
 - Bundler offers a rock-solid guarantee that the third-party code you are running in development and testing is also the third-party code you are running in production.
 - `Installing Groups`: This means that you cannot include different versions of the same gem in different groups, because doing so would result in different sets of dependencies used in development and production.
 - `Binstubs` are wrapper scripts around executables (sometimes referred to as "binaries", although they don't have to be compiled) whose purpose is to prepare the environment before dispatching the call to the original executable.
-- From André, "the extremely brief summary is “bundler creates a tiny ruby file that loads bundler and then runs the command, and puts that into bin/”
+- From André himself: "the extremely brief summary is “bundler creates a tiny ruby file that loads bundler and then runs the command, and puts that into bin/”
 - for example, if you run `bundle binstubs rspec-core`, bundler will create the file `bin/rspec`, and that file will contain just enough code to load bundler, tell it to load the bundled gems, and then run rspec"
 - if you run the `rspec` command directly, without a bundler binstub, rubygems will load the newest version of rspec and that can cause an error if your application actually needs an older version of rspec than the newest version that’s installed
 
