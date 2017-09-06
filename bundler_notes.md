@@ -151,3 +151,9 @@ You can specify a local install path for bundler to use instead of system gems b
 when bundler uses the --path option, it will not consider any system gems
 
 bundler will look for the Gemfile in the current directory and traverse up each parent directory to see if it can find one.
+
+
+To run a spec on a spec:
+```
+bin/rspec path/to/foo_spec.rb
+```
