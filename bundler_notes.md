@@ -157,3 +157,7 @@ To run a spec on a spec:
 ```
 bin/rspec path/to/foo_spec.rb
 ```
+RBenv vs rvm vs chruby:
+- chruby because rvm installs monkeypatches into every gem command and rbenv replaces ruby, gem, and all gem commands with shell scripts
+
+- it's also the least effort to set up, as well as the least intrusive: `brew install chruby; <add chruby to bash profile>; brew install ruby-install; ruby-install 2.4; chruby 2.4`
