@@ -161,3 +161,50 @@ RBenv vs rvm vs chruby:
 - chruby because rvm installs monkeypatches into every gem command and rbenv replaces ruby, gem, and all gem commands with shell scripts
 
 - it's also the least effort to set up, as well as the least intrusive: `brew install chruby; <add chruby to bash profile>; brew install ruby-install; ruby-install 2.4; chruby 2.4`
+
+# Example of quick and dirty script that takes advantage of Pathname Ruby library
+
+
+#!/usr/bin/env ruby
+# an important note from Ruby's vanilla strings:
+# Pathname instances are immutable
+# no methods to change Pathanme instance itself
+# all methods like `dirname`, `join`, & `basename` return a new Pathname instance
+# leaving existing instance unchanged
+require "colorize"
+require "pathname"
+
+errors = []
+
+def matches(pattern, message)
+  # you need \b for word boundry on either side, if not 'he' would fail for every 'the'
+  pattern = /\b#{Regexp.union(pattern)}\b/ if pattern.is_a?(Array)
+  matches = []
+  # searches thru directories recursively searching for files with extensions in .html, .md, .erb, .haml
+  files = Pathname.glob(File.expand_path("../source/**/*.{html,md,markdown,erb,haml}*", __dir__))
+  # __dir__ means the directory you're in currently, __FILE__ means this file right here
+  # globbing is like finding. doesn't use regex, but its own kind of shell expansion wildcards
+  files.each do |file|
+    next unless file.file?
+    relative_path = file.relative_path_from(Pathname('..').expand_path(__dir__))
+
+    # $1 ...  The match for the first parenthesized groups in the last regular expression.
+    next if relative_path.to_s =~ %r{\Asource/v([\d.]+)} && Gem::Version.new($1) <= Gem::Version.new("1.15")
+
+    File.readlines(file).each_with_index do |line, index|
+      next unless line =~ pattern
+
+      matches << "`#{relative_path}:#{index.succ}` #{message}"
+    end
+  end
+
+  matches
+end
+
+errors.concat matches(%w[he she her his], "Don't use gendered pronouns")
+errors.concat matches(%w[actually really just only], "Don't use superflous language")
+
+unless errors.empty?
+  abort "The docs need some attention:\n\t- #{errors.join("\n\t- ")}"
+end
+
